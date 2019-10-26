@@ -22,6 +22,8 @@ namespace FancyScrollView
             Easing = Ease.InOutCubic
         };
 
+        [SerializeField] bool draggable = true;
+
         readonly AutoScrollState autoScrollState = new AutoScrollState();
 
         Action<float> onValueChanged;
@@ -49,6 +51,14 @@ namespace FancyScrollView
             Elastic = ScrollRect.MovementType.Elastic,
             Clamped = ScrollRect.MovementType.Clamped
         }
+        
+        public enum MovementDirection
+        {
+            Left = 0,
+            Right = 1,
+            Up = 2,
+            Down = 3,
+        }
 
         [Serializable]
         class Snap
@@ -59,7 +69,7 @@ namespace FancyScrollView
             public Ease Easing;
         }
 
-        readonly static Func<float, float> defaultEasingFunction = EasingFunction.Get(Ease.OutCubic);
+        static readonly Func<float, float> DefaultEasingFunction = EasingFunction.Get(Ease.OutCubic);
 
         class AutoScrollState
         {
@@ -78,7 +88,7 @@ namespace FancyScrollView
                 Elastic = false;
                 Duration = 0f;
                 StartTime = 0f;
-                EasingFunction = defaultEasingFunction;
+                EasingFunction = DefaultEasingFunction;
                 EndScrollPosition = 0f;
                 OnComplete = null;
             }
@@ -104,16 +114,16 @@ namespace FancyScrollView
         {
             if (duration <= 0f)
             {
-                JumpTo(index);
+                JumpTo(CircularIndex(index, totalCount));
                 return;
             }
 
             autoScrollState.Reset();
             autoScrollState.Enable = true;
             autoScrollState.Duration = duration;
-            autoScrollState.EasingFunction = easingFunction ?? defaultEasingFunction;
+            autoScrollState.EasingFunction = easingFunction ?? DefaultEasingFunction;
             autoScrollState.StartTime = Time.unscaledTime;
-            autoScrollState.EndScrollPosition = CalculateDestinationIndex(index);
+            autoScrollState.EndScrollPosition = Mathf.RoundToInt(currentScrollPosition + CalculateMovementAmount(currentScrollPosition, index));
             autoScrollState.OnComplete = onComplete;
 
             velocity = 0f;
@@ -124,19 +134,39 @@ namespace FancyScrollView
 
         public void JumpTo(int index)
         {
+            if (index < 0 || index > totalCount - 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
             autoScrollState.Reset();
 
             velocity = 0f;
             dragging = false;
 
-            index = CalculateDestinationIndex(index);
-
             UpdateSelection(index);
             UpdatePosition(index);
         }
 
+        public MovementDirection GetMovementDirection(int sourceIndex, int destIndex)
+        {
+            var movementAmount = CalculateMovementAmount(sourceIndex, destIndex);
+            return directionOfRecognize == ScrollDirection.Horizontal
+                ? movementAmount > 0
+                    ? MovementDirection.Left
+                    : MovementDirection.Right
+                : movementAmount > 0
+                    ? MovementDirection.Up
+                    : MovementDirection.Down;
+        }
+
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
+            if (!draggable)
+            {
+                return;
+            }
+
             if (eventData.button != PointerEventData.InputButton.Left)
             {
                 return;
@@ -156,6 +186,11 @@ namespace FancyScrollView
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
+            if (!draggable)
+            {
+                return;
+            }
+
             if (eventData.button != PointerEventData.InputButton.Left)
             {
                 return;
@@ -166,12 +201,11 @@ namespace FancyScrollView
                 return;
             }
 
-            Vector2 localCursor;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 viewport,
                 eventData.position,
                 eventData.pressEventCamera,
-                out localCursor))
+                out var localCursor))
             {
                 return;
             }
@@ -198,6 +232,11 @@ namespace FancyScrollView
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
+            if (!draggable)
+            {
+                return;
+            }
+
             if (eventData.button != PointerEventData.InputButton.Left)
             {
                 return;
@@ -337,23 +376,25 @@ namespace FancyScrollView
             prevScrollPosition = currentScrollPosition;
         }
 
-        int CalculateDestinationIndex(int index) => movementType == MovementType.Unrestricted
-            ? CalculateClosestIndex(index)
-            : Mathf.Clamp(index, 0, totalCount - 1);
-
-        int CalculateClosestIndex(int index)
+        float CalculateMovementAmount(float sourcePosition, float destPosition)
         {
-            var diff = CircularPosition(index, totalCount)
-                       - CircularPosition(currentScrollPosition, totalCount);
-
-            if (Mathf.Abs(diff) > totalCount * 0.5f)
+            if (movementType != MovementType.Unrestricted)
             {
-                diff = Mathf.Sign(-diff) * (totalCount - Mathf.Abs(diff));
+                return Mathf.Clamp(destPosition, 0, totalCount - 1) - sourcePosition;
             }
 
-            return Mathf.RoundToInt(diff + currentScrollPosition);
+            var movementAmount = CircularPosition(destPosition, totalCount) - CircularPosition(sourcePosition, totalCount);
+
+            if (Mathf.Abs(movementAmount) > totalCount * 0.5f)
+            {
+                movementAmount = Mathf.Sign(-movementAmount) * (totalCount - Mathf.Abs(movementAmount));
+            }
+
+            return movementAmount;
         }
 
         float CircularPosition(float p, int size) => size < 1 ? 0 : p < 0 ? size - 1 + (p + 1) % size : p % size;
+
+        int CircularIndex(int i, int size) => size < 1 ? 0 : i < 0 ? size - 1 + (i + 1) % size : i % size;
     }
 }
