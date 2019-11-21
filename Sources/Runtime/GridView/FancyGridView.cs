@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * FancyScrollView (https://github.com/setchi/FancyScrollView)
+ * Copyright (c) 2019 setchi
+ * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
+ */
+
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +22,7 @@ namespace FancyScrollView
         where TContext : class, IFancyScrollRectContext, IFancyGridViewContext, new()
     {
         /// <summary>
-        /// 行同士の余白.
+        /// カラム同士の余白.
         /// </summary>
         [SerializeField] protected float columnSpacing = 0f;
 

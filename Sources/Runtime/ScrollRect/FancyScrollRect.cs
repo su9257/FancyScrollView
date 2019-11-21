@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * FancyScrollView (https://github.com/setchi/FancyScrollView)
+ * Copyright (c) 2019 setchi
+ * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
+ */
+
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using EasingCore;
@@ -59,7 +65,7 @@ namespace FancyScrollView
         Scroller cachedScroller;
 
         /// <summary>
-        /// スクロール位置を制御する <see cref="Scroller"/> のインスタンス.
+        /// スクロール位置を制御する <see cref="FancyScrollView.Scroller"/> のインスタンス.
         /// </summary>
         /// <remarks>
         /// <see cref="Scroller"/> のスクロール位置を変更する際は必ず <see cref="ToScrollerPosition(float)"/> を使用して変換した位置を使用してください.
