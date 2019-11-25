@@ -231,7 +231,7 @@ namespace FancyScrollView
         /// <summary>
         /// 指定した位置まで移動します.
         /// </summary>
-        /// <param name="position">スクロール位置. <c>0.0</c> ~ <c>totalCount - 1</c> の範囲.</param>
+        /// <param name="position">スクロール位置. <c>0f</c> ~ <c>totalCount - 1f</c> の範囲.</param>
         /// <param name="duration">移動にかける秒数.</param>
         /// <param name="onComplete">移動が完了した際に呼び出されるコールバック.</param>
         public void ScrollTo(float position, float duration, Action onComplete = null) => ScrollTo(position, duration, Ease.OutCubic, onComplete);
@@ -239,7 +239,7 @@ namespace FancyScrollView
         /// <summary>
         /// 指定した位置まで移動します.
         /// </summary>
-        /// <param name="position">スクロール位置. <c>0.0</c> ~ <c>totalCount - 1</c> の範囲.</param>
+        /// <param name="position">スクロール位置. <c>0f</c> ~ <c>totalCount - 1f</c> の範囲.</param>
         /// <param name="duration">移動にかける秒数.</param>
         /// <param name="easing">移動に使用するイージング.</param>
         /// <param name="onComplete">移動が完了した際に呼び出されるコールバック.</param>
@@ -248,7 +248,7 @@ namespace FancyScrollView
         /// <summary>
         /// 指定した位置まで移動します.
         /// </summary>
-        /// <param name="position">スクロール位置. <c>0.0</c> ~ <c>totalCount - 1</c> の範囲.</param>
+        /// <param name="position">スクロール位置. <c>0f</c> ~ <c>totalCount - 1f</c> の範囲.</param>
         /// <param name="duration">移動にかける秒数.</param>
         /// <param name="easingFunction">移動に使用するイージング関数.</param>
         /// <param name="onComplete">移動が完了した際に呼び出されるコールバック.</param>
@@ -519,14 +519,14 @@ namespace FancyScrollView
                 return Mathf.Clamp(destPosition, 0, totalCount - 1) - sourcePosition;
             }
 
-            var movementAmount = CircularPosition(destPosition, totalCount) - CircularPosition(sourcePosition, totalCount);
+            var amount = CircularPosition(destPosition, totalCount) - CircularPosition(sourcePosition, totalCount);
 
-            if (Mathf.Abs(movementAmount) > totalCount * 0.5f)
+            if (Mathf.Abs(amount) > totalCount * 0.5f)
             {
-                movementAmount = Mathf.Sign(-movementAmount) * (totalCount - Mathf.Abs(movementAmount));
+                amount = Mathf.Sign(-amount) * (totalCount - Mathf.Abs(amount));
             }
 
-            return movementAmount;
+            return amount;
         }
 
         float CircularPosition(float p, int size) => size < 1 ? 0 : p < 0 ? size - 1 + (p + 1) % size : p % size;
