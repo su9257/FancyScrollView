@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace FancyScrollView.Example02
 {
-    public class Cell : FancyScrollViewCell<ItemData, Context>
+    class Cell : FancyCell<ItemData, Context>
     {
         [SerializeField] Animator animator = default;
         [SerializeField] Text message = default;
@@ -21,7 +21,7 @@ namespace FancyScrollView.Example02
             public static readonly int Scroll = Animator.StringToHash("scroll");
         }
 
-        void Start()
+        public override void Initialize()
         {
             button.onClick.AddListener(() => Context.OnCellClicked?.Invoke(Index));
         }

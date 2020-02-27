@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace FancyScrollView.Example05
 {
-    public class Example05 : MonoBehaviour
+    class Example05 : MonoBehaviour
     {
         [SerializeField] ScrollView scrollView = default;
         [SerializeField] Button prevCellButton = default;

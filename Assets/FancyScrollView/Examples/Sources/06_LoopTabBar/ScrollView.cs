@@ -1,6 +1,6 @@
 /*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -11,7 +11,7 @@ using EasingCore;
 
 namespace FancyScrollView.Example06
 {
-    public class ScrollView : FancyScrollView<ItemData, Context>
+    class ScrollView : FancyScrollView<ItemData, Context>
     {
         [SerializeField] Scroller scroller = default;
         [SerializeField] GameObject cellPrefab = default;

@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -9,10 +9,16 @@ using UnityEngine.UI;
 
 namespace FancyScrollView.Example07
 {
-    public class Cell : FancyScrollRectCell<ItemData, Context>
+    class Cell : FancyScrollRectCell<ItemData, Context>
     {
         [SerializeField] Text message = default;
         [SerializeField] Image image = default;
+        [SerializeField] Button button = default;
+
+        public override void Initialize()
+        {
+            button.onClick.AddListener(() => Context.OnCellClicked?.Invoke(Index));
+        }
 
         public override void UpdateContent(ItemData itemData)
         {
@@ -24,12 +30,12 @@ namespace FancyScrollView.Example07
                 : new Color32(255, 255, 255, 77);
         }
 
-        protected override void UpdatePosition(float position, float viewportPosition)
+        protected override void UpdatePosition(float normalizedPosition, float localPosition)
         {
-            var x = Mathf.Sin(position * Mathf.PI * 2) * 65;
-            var y = viewportPosition;
+            base.UpdatePosition(normalizedPosition, localPosition);
 
-            transform.localPosition = new Vector2(x, y);
+            var wave = Mathf.Sin(normalizedPosition * Mathf.PI * 2) * 65;
+            transform.localPosition += Vector3.right * wave;
         }
     }
 }

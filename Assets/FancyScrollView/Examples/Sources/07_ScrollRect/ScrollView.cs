@@ -1,21 +1,23 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using EasingCore;
 
 namespace FancyScrollView.Example07
 {
-    public class FancyScrollRect : FancyScrollRect<ItemData, Context>
+    class ScrollView : FancyScrollRect<ItemData, Context>
     {
+        [SerializeField] float cellSize = 100f;
         [SerializeField] GameObject cellPrefab = default;
 
+        protected override float CellSize => cellSize;
         protected override GameObject CellPrefab => cellPrefab;
-
         public int DataCount => ItemsSource.Count;
 
         public float PaddingTop
@@ -24,7 +26,7 @@ namespace FancyScrollView.Example07
             set
             {
                 paddingHead = value;
-                Refresh();
+                Relayout();
             }
         }
 
@@ -34,7 +36,7 @@ namespace FancyScrollView.Example07
             set
             {
                 paddingTail = value;
-                Refresh();
+                Relayout();
             }
         }
 
@@ -44,8 +46,13 @@ namespace FancyScrollView.Example07
             set
             {
                 spacing = value;
-                Refresh();
+                Relayout();
             }
+        }
+
+        public void OnCellClicked(Action<int> callback)
+        {
+            Context.OnCellClicked = callback;
         }
 
         public void UpdateData(IList<ItemData> items)
@@ -53,16 +60,27 @@ namespace FancyScrollView.Example07
             UpdateContents(items);
         }
 
-        public void ScrollTo(int index, float duration, Ease easing, Alignment alignment = Alignment.Center)
+        public void ScrollTo(int index, float duration, Ease easing, Alignment alignment = Alignment.Middle)
         {
             UpdateSelection(index);
-            base.ScrollTo(index, duration, easing, alignment);
+            ScrollTo(index, duration, easing, GetAlignment(alignment));
         }
 
-        public void JumpTo(int index, Alignment alignment = Alignment.Center)
+        public void JumpTo(int index, Alignment alignment = Alignment.Middle)
         {
             UpdateSelection(index);
-            UpdatePosition(index, alignment);
+            JumpTo(index, GetAlignment(alignment));
+        }
+
+        float GetAlignment(Alignment alignment)
+        {
+            switch (alignment)
+            {
+                case Alignment.Upper: return 0.0f;
+                case Alignment.Middle: return 0.5f;
+                case Alignment.Lower: return 1.0f;
+                default: return GetAlignment(Alignment.Middle);
+            }
         }
 
         void UpdateSelection(int index)

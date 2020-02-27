@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -12,9 +12,9 @@ using EasingCore;
 
 namespace FancyScrollView.Example08
 {
-    public class Example08 : MonoBehaviour
+    class Example08 : MonoBehaviour
     {
-        [SerializeField] FancyGridView gridView = default;
+        [SerializeField] GridView gridView = default;
         [SerializeField] InputField paddingTopInputField = default;
         [SerializeField] InputField paddingBottomInputField = default;
         [SerializeField] InputField xSpacingInputField = default;
@@ -25,6 +25,8 @@ namespace FancyScrollView.Example08
 
         void Start()
         {
+            gridView.OnCellClicked(index => selectIndexInputField.text = index.ToString());
+
             paddingTopInputField.onValueChanged.AddListener(_ =>
                 TryParseValue(paddingTopInputField, 0, 999, value => gridView.PaddingTop = value));
             paddingTopInputField.text = gridView.PaddingTop.ToString();
@@ -43,7 +45,7 @@ namespace FancyScrollView.Example08
 
             alignmentDropdown.AddOptions(Enum.GetNames(typeof(Alignment)).Select(x => new Dropdown.OptionData(x)).ToList());
             alignmentDropdown.onValueChanged.AddListener(_ => SelectCell());
-            alignmentDropdown.value = (int)Alignment.Center;
+            alignmentDropdown.value = (int)Alignment.Middle;
 
             selectIndexInputField.onValueChanged.AddListener(_ => SelectCell());
             selectIndexInputField.text = "50";

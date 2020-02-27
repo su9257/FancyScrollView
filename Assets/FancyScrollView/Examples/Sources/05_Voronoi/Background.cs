@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -11,14 +11,14 @@ using UnityEngine.UI;
 
 namespace FancyScrollView.Example05
 {
-    public class Background : MonoBehaviour, IPointerClickHandler
+    class Background : MonoBehaviour, IPointerClickHandler
     {
         [SerializeField] Image background = default;
         [SerializeField] ScrollView scrollView = default;
 
         RectTransform rectTransform;
 
-        static class ShaderId
+        static class Uniform
         {
             public static readonly int Resolution = Shader.PropertyToID("_Resolution");
             public static readonly int CellState = Shader.PropertyToID("_CellState");
@@ -39,8 +39,8 @@ namespace FancyScrollView.Example05
             scrollView.SetCellState(offset + 2, -1, -rect.x, -rect.y * 1.3f, 0f);
             scrollView.SetCellState(offset + 3, -1,  rect.x,  rect.y * 1.3f, 0f);
 
-            background.material.SetVector(ShaderId.Resolution, rectTransform.rect.size);
-            background.material.SetVectorArray(ShaderId.CellState, scrollView.GetCellState());
+            background.material.SetVector(Uniform.Resolution, rectTransform.rect.size);
+            background.material.SetVectorArray(Uniform.CellState, scrollView.GetCellState());
         }
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)

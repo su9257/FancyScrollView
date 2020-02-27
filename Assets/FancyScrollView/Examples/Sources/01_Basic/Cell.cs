@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 namespace FancyScrollView.Example01
 {
-    public class Cell : FancyScrollViewCell<ItemData>
+    class Cell : FancyCell<ItemData>
     {
         [SerializeField] Animator animator = default;
         [SerializeField] Text message = default;

@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace FancyScrollView.Example01
 {
-    public class ScrollView : FancyScrollView<ItemData>
+    class ScrollView : FancyScrollView<ItemData>
     {
         [SerializeField] Scroller scroller = default;
         [SerializeField] GameObject cellPrefab = default;

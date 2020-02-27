@@ -1,6 +1,6 @@
 ﻿/*
  * FancyScrollView (https://github.com/setchi/FancyScrollView)
- * Copyright (c) 2019 setchi
+ * Copyright (c) 2020 setchi
  * Licensed under MIT (https://github.com/setchi/FancyScrollView/blob/master/LICENSE)
  */
 
@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace FancyScrollView.Example03
 {
-    public class Example03 : MonoBehaviour
+    class Example03 : MonoBehaviour
     {
         [SerializeField] ScrollView scrollView = default;
 
